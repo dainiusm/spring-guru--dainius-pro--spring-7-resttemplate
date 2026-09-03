@@ -1,5 +1,6 @@
 package guru.springframework.spring7resttemplate.client;
 
+import guru.springframework.spring7resttemplate.config.RestTemplateBuilderConfig;
 import guru.springframework.spring7resttemplate.model.BeerDTO;
 import guru.springframework.spring7resttemplate.model.RestPageImpl;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,10 @@ import static java.lang.IO.println;
 @Service
 public class BeerClientImpl implements BeerClient {
 
-    public static final String BEER_GET_URL = "http://localhost:8080/api/v1/beer";
+
+    /// Base URL is configured in [RestTemplateBuilderConfig]
+    public static final String GET_BEER_PATH = "/api/v1/beer";
+
     private final RestTemplateBuilder restTemplateBuilder;
 
     @Override
@@ -28,20 +32,23 @@ public class BeerClientImpl implements BeerClient {
 
         RestTemplate restTemplate = restTemplateBuilder.build();
 
-        ResponseEntity<String> stringResponse = restTemplate.getForEntity(BEER_GET_URL, String.class);
+        ResponseEntity<String> stringResponse = restTemplate.getForEntity(GET_BEER_PATH, String.class);
         println("BeerClientImpl :: stringResponse.getBody() = " + stringResponse.getBody());
 
-        ResponseEntity<Map> mapResponse = restTemplate.getForEntity(BEER_GET_URL, Map.class);
+        ResponseEntity<Map> mapResponse = restTemplate.getForEntity(GET_BEER_PATH, Map.class);
 
-        ResponseEntity<JsonNode> jsonResponse = restTemplate.getForEntity(BEER_GET_URL, JsonNode.class);
+        ResponseEntity<JsonNode> jsonResponse = restTemplate.getForEntity(GET_BEER_PATH, JsonNode.class);
 
         jsonResponse.getBody().findPath("content")
                 .forEach(
                         node -> println(node.path("beerName").asString())
                 );
 
+
+        // restTemplate.getForEntity() does not work, as it does not support parameterized types due to erasure.
+        // so restTemplate.exchange() is used.
         ResponseEntity<RestPageImpl<BeerDTO>> pageResponse = restTemplate.exchange(
-                BEER_GET_URL,
+                GET_BEER_PATH,
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<RestPageImpl<BeerDTO>>() {
