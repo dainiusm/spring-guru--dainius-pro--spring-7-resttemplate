@@ -1,9 +1,12 @@
 package guru.springframework.spring7resttemplate.client;
 
 import guru.springframework.spring7resttemplate.model.BeerDTO;
+import guru.springframework.spring7resttemplate.model.RestPageImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.restclient.RestTemplateBuilder;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -26,6 +29,7 @@ public class BeerClientImpl implements BeerClient {
         RestTemplate restTemplate = restTemplateBuilder.build();
 
         ResponseEntity<String> stringResponse = restTemplate.getForEntity(BEER_GET_URL, String.class);
+        println("BeerClientImpl :: stringResponse.getBody() = " + stringResponse.getBody());
 
         ResponseEntity<Map> mapResponse = restTemplate.getForEntity(BEER_GET_URL, Map.class);
 
@@ -36,8 +40,15 @@ public class BeerClientImpl implements BeerClient {
                         node -> println(node.path("beerName").asString())
                 );
 
-        println("BeerClientImpl :: stringResponse.getBody() = " + stringResponse.getBody());
+        ResponseEntity<RestPageImpl<BeerDTO>> pageResponse = restTemplate.exchange(
+                BEER_GET_URL,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<RestPageImpl<BeerDTO>>() {
+                });
 
-        return null;
+        println("pageResponse = " + pageResponse);
+
+        return pageResponse.getBody();
     }
 }
