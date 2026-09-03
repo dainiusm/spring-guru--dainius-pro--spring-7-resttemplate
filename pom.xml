@@ -10,14 +10,14 @@
     </parent>
 
     <groupId>guru.springframework</groupId>
-    <artifactId>spring-6-resttemplate</artifactId>
+    <artifactId>spring-7-resttemplate</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
-    <name>spring-6-resttemplate</name>
-    <description>spring-6-resttemplate</description>
+    <name>spring-7-resttemplate</name>
+    <description>spring-7-resttemplate</description>
 
     <properties>
-        <java.version>25</java.version>
+        <java.version>26</java.version>
     </properties>
 
     <dependencies>
