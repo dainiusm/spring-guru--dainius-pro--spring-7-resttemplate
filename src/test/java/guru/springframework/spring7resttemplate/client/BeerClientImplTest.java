@@ -170,4 +170,31 @@ class BeerClientImplTest {
                 .isEqualTo(newDto);
     }
 
+
+    /// -----------------------------------------------------------------------------------------------------------------
+    @Test
+    void testUpdateBeer() {
+
+        BeerDTO newDto = BeerDTO.builder()
+                .price(new BigDecimal("10.99"))
+                .beerName("Mango Bobs 2")
+                .beerStyle(BeerStyle.IPA)
+                .quantityOnHand(500)
+                .upc("123245")
+                .build();
+
+        BeerDTO beerDto = beerClient.createBeer(newDto);
+
+        final String renewedName = "Mango Bobs 3";
+        beerDto.setBeerName(renewedName);
+
+        BeerDTO updatedBeer = beerClient.updateBeer(beerDto);
+
+        assertThat(renewedName).isEqualTo(updatedBeer.getBeerName());
+        assertThat(updatedBeer).usingRecursiveComparison()
+                .ignoringFields("id", "version", "updateDate")
+                .isEqualTo(beerDto);
+
+    }
+
 }

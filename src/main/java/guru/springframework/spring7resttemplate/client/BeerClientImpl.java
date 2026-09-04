@@ -101,6 +101,7 @@ public class BeerClientImpl implements BeerClient {
 
         // restTemplate.getForEntity() does not work, as it does not support parameterized types due to erasure.
         // so restTemplate.exchange() is used.
+        @SuppressWarnings("Convert2Diamond")
         ResponseEntity<RestPageImpl<BeerDTO>> pageResponse = restTemplate.exchange(
                 uriComponentsBuilder.toUriString(),
                 HttpMethod.GET,
@@ -139,4 +140,13 @@ public class BeerClientImpl implements BeerClient {
         return restTemplate.getForObject(uri.getPath(), BeerDTO.class);
     }
 
+    /// -----------------------------------------------------------------------------------------------------------------
+    @Override
+    public BeerDTO updateBeer(BeerDTO beerDto) {
+        RestTemplate restTemplate = restTemplateBuilder.build();
+
+        restTemplate.put(GET_BEER_BY_ID_PATH, beerDto, beerDto.getId());
+
+        return getBeerById(beerDto.getId());
+    }
 }
