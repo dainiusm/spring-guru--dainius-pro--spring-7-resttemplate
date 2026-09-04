@@ -15,6 +15,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.UUID;
+
 import static java.lang.IO.println;
 
 @RequiredArgsConstructor
@@ -24,8 +26,22 @@ public class BeerClientImpl implements BeerClient {
 
     /// Base URL is configured in [RestTemplateBuilderConfig]
     public static final String GET_BEER_PATH = "/api/v1/beer";
+    public static final String GET_BEER_BY_ID_PATH = "/api/v1/beer/{beerId}";
 
     private final RestTemplateBuilder restTemplateBuilder;
+
+
+    @Override
+    public BeerDTO getBeerById(UUID beerId) {
+        RestTemplate restTemplate = restTemplateBuilder.build();
+
+//        ResponseEntity<BeerDTO> entity = restTemplate.getForEntity(GET_BEER_BY_ID_PATH, BeerDTO.class, beerId);
+//        entity.getStatusCode();
+//        entity.getHeaders();
+//        entity.getBody();
+
+        return restTemplate.getForObject(GET_BEER_BY_ID_PATH, BeerDTO.class, beerId);
+    }
 
 
     /// -----------------------------------------------------------------------------------------------------------------
@@ -34,11 +50,13 @@ public class BeerClientImpl implements BeerClient {
         return listBeers(null, null);
     }
 
+
     /// -----------------------------------------------------------------------------------------------------------------
     @Override
     public Page<BeerDTO> listBeers(Integer pageNumber, Integer pageSize) {
         return listBeers(null, null, false, pageNumber, pageSize);
     }
+
 
     /// -----------------------------------------------------------------------------------------------------------------
     @Override

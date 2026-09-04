@@ -4,6 +4,8 @@ import guru.springframework.spring7resttemplate.model.BeerDTO;
 import guru.springframework.spring7resttemplate.model.BeerStyle;
 import org.springframework.data.domain.Page;
 
+import java.util.UUID;
+
 public interface BeerClient {
 
     Page<BeerDTO> listBeers();
@@ -11,4 +13,6 @@ public interface BeerClient {
     Page<BeerDTO> listBeers(Integer pageNumber, Integer pageSize);
 
     Page<BeerDTO> listBeers(String beerName, BeerStyle beerStyle, Boolean showInventory, Integer pageNumber, Integer pageSize);
+
+    BeerDTO getBeerById(UUID beerId);
 }

@@ -23,6 +23,22 @@ class BeerClientImplTest {
     @Autowired
     BeerClient beerClient;
 
+
+    @Test
+    void getBeerById() {
+        BeerDTO dto = beerClient.listBeers().getContent().getFirst();
+
+        BeerDTO byId = beerClient.getBeerById(dto.getId());
+
+        // Ignoring "quantityOnHand"
+        assertThat(byId).isNotNull();
+        assertThat(dto.getId()).isEqualByComparingTo(byId.getId());
+        assertThat(dto).usingRecursiveComparison()
+                .ignoringFields("quantityOnHand")
+                .isEqualTo(byId);
+    }
+
+
     /// -----------------------------------------------------------------------------------------------------------------
     @Test
     void testListBeersByNameAndByStyleWithInventory() {
@@ -79,6 +95,7 @@ class BeerClientImplTest {
         println("beersResponse = " + beersResponse);
         println("beers = " + beers);
     }
+
 
     /// -----------------------------------------------------------------------------------------------------------------
     @Test
