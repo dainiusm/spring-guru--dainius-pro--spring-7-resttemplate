@@ -21,6 +21,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestToUriTemplate;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 @RestClientTest(BeerClientImpl.class)
@@ -36,6 +37,30 @@ class BeerClientMockTest {
     @Autowired
     ObjectMapper objectMapper;
 
+
+    /// -----------------------------------------------------------------------------------------------------------------
+    @Test
+    void testGetBeerById() {
+        BeerDTO beerDto = getBeerDto();
+        String payload = objectMapper.writeValueAsString(beerDto);
+
+        server.expect(method(HttpMethod.GET))
+                .andExpect(requestToUriTemplate(
+                        BeerClientImpl.GET_BEER_BY_ID_PATH,
+                        beerDto.getId()
+                ))
+                .andRespond(withSuccess(payload, MediaType.APPLICATION_JSON));
+
+        BeerDTO byId = beerClient.getBeerById(beerDto.getId());
+
+        assertThat(byId)
+                .isNotNull()
+                .usingRecursiveComparison().isEqualTo(beerDto);
+
+    }
+
+
+    /// -----------------------------------------------------------------------------------------------------------------
     @Test
     void testListBeers() {
         String payload = objectMapper.writeValueAsString(getPage());
@@ -48,6 +73,7 @@ class BeerClientMockTest {
         assertThat(dtos.getContent()).hasSize(1);
         server.verify();
     }
+
 
     BeerDTO getBeerDto() {
         return BeerDTO.builder()
