@@ -78,8 +78,7 @@ public class BeerClientImpl implements BeerClient {
 //                );
 
 
-        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder
-                .fromPath(GET_BEER_PATH);
+        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromPath(GET_BEER_PATH);
 
         if (StringUtils.hasText(beerName)) {
             uriComponentsBuilder.queryParam("beerName", beerName);
@@ -151,6 +150,7 @@ public class BeerClientImpl implements BeerClient {
         return getBeerById(beerDto.getId());
     }
 
+
     /// -----------------------------------------------------------------------------------------------------------------
     @Override
     public BeerDTO updateBeerByPatch(UUID beerId, BeerDTO beerDto) {
@@ -159,5 +159,13 @@ public class BeerClientImpl implements BeerClient {
         restTemplate.patchForObject(GET_BEER_BY_ID_PATH, beerDto, BeerDTO.class, beerId);
 
         return restTemplate.getForObject(GET_BEER_BY_ID_PATH, BeerDTO.class, beerId);
+    }
+
+
+    /// -----------------------------------------------------------------------------------------------------------------
+    @Override
+    public void deleteBeer(UUID beerId) {
+        RestTemplate restTemplate = restTemplateBuilder.build();
+        restTemplate.delete(GET_BEER_BY_ID_PATH, beerId);
     }
 }
