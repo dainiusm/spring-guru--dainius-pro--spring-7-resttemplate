@@ -155,7 +155,6 @@ class BeerClientImplTest {
     /// -----------------------------------------------------------------------------------------------------------------
     @Test
     void testCreateBeer() {
-
         BeerDTO newDto = BeerDTO.builder()
                 .beerName("Pievos Princas")
                 .beerStyle(BeerStyle.IPA)
