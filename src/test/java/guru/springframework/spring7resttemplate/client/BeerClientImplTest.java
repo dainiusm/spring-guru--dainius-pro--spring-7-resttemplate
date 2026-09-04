@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static java.lang.IO.println;
@@ -148,6 +149,26 @@ class BeerClientImplTest {
 
         println("beersResponse = " + beersResponse);
         println("beers = " + beers);
+    }
+
+
+    /// -----------------------------------------------------------------------------------------------------------------
+    @Test
+    void testCreateBeer() {
+
+        BeerDTO newDto = BeerDTO.builder()
+                .beerName("Pievos Princas")
+                .beerStyle(BeerStyle.IPA)
+                .price(new BigDecimal("10.99"))
+                .quantityOnHand(500)
+                .upc("123245")
+                .build();
+
+        BeerDTO savedDto = beerClient.createBeer(newDto);
+        assertThat(savedDto).isNotNull();
+        assertThat(savedDto).usingRecursiveComparison()
+                .ignoringFields("id", "version", "createdDate", "updateDate")
+                .isEqualTo(newDto);
     }
 
 }
