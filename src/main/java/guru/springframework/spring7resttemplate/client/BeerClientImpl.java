@@ -15,6 +15,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
+import java.util.Objects;
 import java.util.UUID;
 
 import static java.lang.IO.println;
@@ -111,13 +113,30 @@ public class BeerClientImpl implements BeerClient {
         return pageResponse.getBody();
     }
 
+
+    static final boolean if__create_beer_and_get_via_location = true;
+
     @Override
     public BeerDTO createBeer(BeerDTO beerDto) {
+        return if__create_beer_and_get_via_location ?
+                __createBeerPostLocationGet(beerDto) :
+                __createBeerPost(beerDto);
+    }
 
+    /// Receives created resource as POST response body
+    BeerDTO __createBeerPost(BeerDTO beerDto) {
         RestTemplate restTemplate = restTemplateBuilder.build();
-
         ResponseEntity<BeerDTO> responseEntity = restTemplate.postForEntity(GET_BEER_PATH, beerDto, BeerDTO.class);
-
         return responseEntity.getBody();
     }
+
+    /// Another implementation of Beer resource creation via POST
+    /// Makes 2 calls to the server, used as example of capabilities
+    BeerDTO __createBeerPostLocationGet(BeerDTO beerDto) {
+        RestTemplate restTemplate = restTemplateBuilder.build();
+        URI uri = restTemplate.postForLocation(GET_BEER_PATH, beerDto);
+        Objects.requireNonNull(uri, "POST call to " + GET_BEER_PATH + " returned no Location header");
+        return restTemplate.getForObject(uri.getPath(), BeerDTO.class);
+    }
+
 }
