@@ -192,9 +192,31 @@ class BeerClientImplTest {
 
         assertThat(renewedName).isEqualTo(updatedBeer.getBeerName());
         assertThat(updatedBeer).usingRecursiveComparison()
-                .ignoringFields("id", "version", "updateDate")
+                .ignoringFields("version", "updateDate")
                 .isEqualTo(beerDto);
 
+    }
+
+
+    /// -----------------------------------------------------------------------------------------------------------------
+    @Test
+    void getUpdateBeerByPatch() {
+        BeerDTO dto = beerClient.listBeers().getContent().getFirst();
+
+        dto.setBeerName("Mango Bobs 5");
+        dto.setBeerStyle(BeerStyle.GOSE);
+        dto.setUpc("11111-22222-777777");
+        dto.setQuantityOnHand(9396);
+        dto.setPrice(new BigDecimal("123456.79"));
+
+        BeerDTO patchedBeer = beerClient.updateBeerByPatch(dto.getId(), dto);
+
+        // Ignoring "quantityOnHand"
+        assertThat(patchedBeer).isNotNull();
+        assertThat(dto.getId()).isEqualByComparingTo(patchedBeer.getId());
+        assertThat(dto).usingRecursiveComparison()
+                .ignoringFields("version", "updateDate")
+                .isEqualTo(patchedBeer);
     }
 
 }

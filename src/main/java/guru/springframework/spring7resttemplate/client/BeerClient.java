@@ -19,4 +19,6 @@ public interface BeerClient {
     BeerDTO createBeer(BeerDTO beerDto);
 
     BeerDTO updateBeer(BeerDTO beerDto);
+
+    BeerDTO updateBeerByPatch(UUID beerId, BeerDTO beerDto);
 }

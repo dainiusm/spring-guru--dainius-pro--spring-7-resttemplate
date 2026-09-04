@@ -25,7 +25,6 @@ import static java.lang.IO.println;
 @Service
 public class BeerClientImpl implements BeerClient {
 
-
     /// Base URL is configured in [RestTemplateBuilderConfig]
     public static final String GET_BEER_PATH = "/api/v1/beer";
     public static final String GET_BEER_BY_ID_PATH = "/api/v1/beer/{beerId}";
@@ -115,6 +114,7 @@ public class BeerClientImpl implements BeerClient {
     }
 
 
+    /// -----------------------------------------------------------------------------------------------------------------
     static final boolean if__create_beer_and_get_via_location = true;
 
     @Override
@@ -140,6 +140,7 @@ public class BeerClientImpl implements BeerClient {
         return restTemplate.getForObject(uri.getPath(), BeerDTO.class);
     }
 
+
     /// -----------------------------------------------------------------------------------------------------------------
     @Override
     public BeerDTO updateBeer(BeerDTO beerDto) {
@@ -148,5 +149,15 @@ public class BeerClientImpl implements BeerClient {
         restTemplate.put(GET_BEER_BY_ID_PATH, beerDto, beerDto.getId());
 
         return getBeerById(beerDto.getId());
+    }
+
+    /// -----------------------------------------------------------------------------------------------------------------
+    @Override
+    public BeerDTO updateBeerByPatch(UUID beerId, BeerDTO beerDto) {
+        RestTemplate restTemplate = restTemplateBuilder.build();
+
+        restTemplate.patchForObject(GET_BEER_BY_ID_PATH, beerDto, BeerDTO.class, beerId);
+
+        return restTemplate.getForObject(GET_BEER_BY_ID_PATH, BeerDTO.class, beerId);
     }
 }
