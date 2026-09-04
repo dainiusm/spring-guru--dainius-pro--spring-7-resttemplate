@@ -2,6 +2,7 @@ package guru.springframework.spring7resttemplate.model;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.extern.jackson.Jacksonized;
 
 import java.math.BigDecimal;
@@ -14,6 +15,7 @@ import java.util.UUID;
 @Data
 @Builder
 @Jacksonized
+@EqualsAndHashCode
 public class BeerDTO {
     private UUID id;
     private Integer version;
